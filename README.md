@@ -36,7 +36,7 @@ java -jar target/security-operations-dashboard-1.0.0.jar
 
 ## API
 
-All API routes require HTTP Basic authentication. Mutating requests also require a CSRF token. The dashboard UI obtains the token from its rendered page and sends it in the `X-CSRF-TOKEN` header.
+All API routes require authentication (browser form session or HTTP Basic). Mutating requests also require a CSRF token. The dashboard UI obtains the token from its rendered page and sends it in the `X-XSRF-TOKEN` header.
 
 | Method | Path | Purpose |
 | --- | --- | --- |

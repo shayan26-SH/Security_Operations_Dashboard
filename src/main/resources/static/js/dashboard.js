@@ -5,7 +5,6 @@ const alertMessage = document.querySelector("#alert-message");
 
 const severityOrder = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
 const severityClass = (severity) => severity.toLowerCase();
-const escapeSelectorValue = (value) => window.CSS?.escape(value) ?? value.replace(/[^a-zA-Z0-9_-]/g, "");
 
 async function apiGet(path) {
     const response = await fetch(path, { headers: { Accept: "application/json" } });
@@ -149,9 +148,13 @@ function renderAssets(assets) {
         exposure.className = asset.internetExposed ? "exposure-public" : "exposure-private";
         row.append(exposure);
         const patch = makeCell(asset.patchStatus);
-        patch.innerHTML = "";
         const patchBadge = document.createElement("span");
-        patchBadge.className = `patch-badge ${escapeSelectorValue(asset.patchStatus.toLowerCase().replaceAll(" ", "-"))}`;
+        const patchClass = {
+            Current: "current",
+            "Needs review": "needs-review",
+            "Pending patch": "pending-patch"
+        }[asset.patchStatus] ?? "needs-review";
+        patchBadge.className = `patch-badge ${patchClass}`;
         patchBadge.textContent = asset.patchStatus;
         patch.append(patchBadge);
         row.append(patch, makeCell(asset.owner));
@@ -180,7 +183,7 @@ async function acknowledgeAlert(id, button) {
     try {
         const response = await fetch(`/api/alerts/${encodeURIComponent(id)}/acknowledge`, {
             method: "POST",
-            headers: { Accept: "application/json", "X-CSRF-TOKEN": csrfToken }
+            headers: { Accept: "application/json", "X-XSRF-TOKEN": csrfToken }
         });
         if (!response.ok) {
             const message = response.status === 409
