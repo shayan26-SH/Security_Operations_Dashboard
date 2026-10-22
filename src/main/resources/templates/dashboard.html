@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" th:content="${_csrf.token}">
+    <title>Security Operations | Sentinel</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <script th:src="@{/js/dashboard.js}" defer></script>
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="/" aria-label="Sentinel home">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>sentinel<span class="brand-period">.</span><small>SECURITY OPERATIONS</small></span>
+        </a>
+        <p class="nav-caption">WORKSPACE</p>
+        <a class="nav-link active" href="#overview"><span aria-hidden="true">▦</span> Overview</a>
+        <a class="nav-link" href="#alerts"><span aria-hidden="true">◉</span> Alert queue <span id="nav-open-count" class="nav-count">—</span></a>
+        <a class="nav-link" href="#assets"><span aria-hidden="true">◇</span> Asset inventory</a>
+        <div class="sidebar-bottom">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>Monitoring active<small>Local demo environment</small></span>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div><p class="eyebrow">SECURITY OPERATIONS CENTER</p><h1>Overview</h1></div>
+            <div class="topbar-meta"><span class="live-indicator"><i></i> LIVE</span><span id="current-date"></span></div>
+        </header>
+
+        <section id="overview" aria-labelledby="overview-title">
+            <div class="section-heading">
+                <div><h2 id="overview-title">Environment at a glance</h2><p>Review active risk signals across your monitored environment.</p></div>
+                <span class="demo-badge">DEMO DATA</span>
+            </div>
+            <div class="metrics-grid" aria-live="polite">
+                <article class="metric-card metric-critical"><div class="metric-label">Open alerts <span>↗</span></div><div id="metric-open" class="metric-value">—</div><div class="metric-foot">Need analyst attention</div></article>
+                <article class="metric-card"><div class="metric-label">Critical open <span class="metric-symbol critical-symbol">!</span></div><div id="metric-critical" class="metric-value">—</div><div class="metric-foot">Highest-priority alerts</div></article>
+                <article class="metric-card"><div class="metric-label">Monitored assets <span class="metric-symbol">◇</span></div><div id="metric-assets" class="metric-value">—</div><div class="metric-foot">Across connected environments</div></article>
+                <article class="metric-card"><div class="metric-label">Internet exposed <span class="metric-symbol">◎</span></div><div id="metric-exposed" class="metric-value">—</div><div class="metric-foot">Assets with public exposure</div></article>
+            </div>
+        </section>
+
+        <section class="insight-grid" aria-label="Security insights">
+            <article class="panel severity-panel">
+                <div class="panel-heading"><div><h2>Alert severity</h2><p>All detected alerts by severity</p></div><span class="panel-icon">◌</span></div>
+                <div id="severity-chart" class="severity-chart" aria-label="Alert counts by severity"></div>
+            </article>
+            <article class="panel risk-panel">
+                <div class="panel-heading"><div><h2>Environment risk</h2><p>Average asset risk score</p></div><span class="panel-icon">⌁</span></div>
+                <div class="risk-score-wrap"><div id="risk-score" class="risk-score">—<span>/100</span></div><span id="risk-label" class="risk-label">Calculating</span></div>
+                <div class="risk-track"><span id="risk-fill"></span></div>
+                <div class="risk-foot"><span>LOW</span><span>MODERATE</span><span>HIGH</span></div>
+            </article>
+        </section>
+
+        <section id="alerts" class="panel data-panel" aria-labelledby="alerts-title">
+            <div class="panel-heading data-heading">
+                <div><h2 id="alerts-title">Alert queue</h2><p>Investigate and acknowledge incoming signals.</p></div>
+                <div class="filter-controls">
+                    <label class="sr-only" for="alert-search">Search alerts</label>
+                    <input id="alert-search" type="search" placeholder="Search alerts..." autocomplete="off">
+                    <label class="sr-only" for="severity-filter">Filter by severity</label>
+                    <select id="severity-filter"><option value="">All severities</option><option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option></select>
+                    <label class="sr-only" for="status-filter">Filter by status</label>
+                    <select id="status-filter"><option value="">All statuses</option><option>OPEN</option><option>ACKNOWLEDGED</option><option>RESOLVED</option></select>
+                </div>
+            </div>
+            <div id="alert-message" class="inline-message" role="status" aria-live="polite"></div>
+            <div class="table-scroll">
+                <table>
+                    <thead><tr><th scope="col">Severity</th><th scope="col">Alert</th><th scope="col">Asset</th><th scope="col">Source</th><th scope="col">Detected</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+                    <tbody id="alerts-body"><tr><td colspan="7" class="loading-cell">Loading alert signals...</td></tr></tbody>
+                </table>
+            </div>
+            <div id="alert-count" class="table-footer"></div>
+        </section>
+
+        <section id="assets" class="panel data-panel asset-panel" aria-labelledby="assets-title">
+            <div class="panel-heading"><div><h2 id="assets-title">Asset inventory</h2><p>Highest-risk assets are listed first.</p></div><span class="demo-badge">RISK RANKED</span></div>
+            <div class="table-scroll">
+                <table>
+                    <thead><tr><th scope="col">Asset</th><th scope="col">Type</th><th scope="col">Environment</th><th scope="col">Risk score</th><th scope="col">Exposure</th><th scope="col">Patch status</th><th scope="col">Owner</th></tr></thead>
+                    <tbody id="assets-body"><tr><td colspan="7" class="loading-cell">Loading asset inventory...</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+        <footer class="page-footer">Sentinel Security Operations <span>•</span> Fictional demonstration data — no live systems connected</footer>
+    </main>
+</div>
+</body>
+</html>
